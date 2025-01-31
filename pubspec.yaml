@@ -38,6 +38,7 @@ dependencies:
   flutter_bloc: ^9.0.0
   auto_route: ^9.3.0+1
   hive_flutter: ^1.1.0
+  shared_preferences: ^2.5.1
   
 dev_dependencies:
   flutter_test:
