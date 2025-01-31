@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 part 'charging_station.g.dart';
 
@@ -37,6 +37,9 @@ class ChargingStation extends HiveObject {
   @HiveField(10)
   final double rating;
 
+  @HiveField(11)
+  final bool favorite;
+
   ChargingStation({
     required this.id,
     required this.name,
@@ -49,7 +52,25 @@ class ChargingStation extends HiveObject {
     required this.price,
     required this.operator,
     required this.rating,
+    this.favorite = false,
   });
+
+  ChargingStation copyWith({bool? favorite}) {
+    return ChargingStation(
+      id: id,
+      name: name,
+      latitude: latitude,
+      longitude: longitude,
+      address: address,
+      power: power,
+      connectors: connectors,
+      isAvailable: isAvailable,
+      price: price,
+      operator: operator,
+      rating: rating,
+      favorite: favorite ?? this.favorite,
+    );
+  }
 
   factory ChargingStation.fromJson(Map<String, dynamic> json) {
     return ChargingStation(
