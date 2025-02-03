@@ -8,3 +8,8 @@ class ToggleFavoriteEvent extends HomeScreenEvent {
   final String stationId;
   ToggleFavoriteEvent(this.stationId);
 }
+
+class CheckStationStatusEvent extends HomeScreenEvent {
+  final String stationId;
+  CheckStationStatusEvent(this.stationId);
+}

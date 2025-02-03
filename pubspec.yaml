@@ -39,6 +39,7 @@ dependencies:
   auto_route: ^9.3.0+1
   hive_flutter: ^1.1.0
   shared_preferences: ^2.5.1
+  collection: ^1.19.0
   
 dev_dependencies:
   flutter_test:

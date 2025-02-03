@@ -1,48 +1,50 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:sola_test_task/models/charging_station.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/bloc.dart';
+import 'widgets/favorite_icon.dart';
+import 'widgets/station_details.dart';
 
 @RoutePage()
 class StationInfoScreen extends StatelessWidget {
   final String stationId;
 
+  // Constructor for passing the station ID to this screen
   const StationInfoScreen({super.key, required this.stationId});
 
   @override
   Widget build(BuildContext context) {
-    final box = Hive.box<ChargingStation>('session_stations');
-    final station = box.get(stationId);
-
-    if (station == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text("Station Not Found")),
-        body: Center(child: Text("Station data is missing.")),
-      );
-    }
+    // Dispatches event to fetch station info based on stationId
+    context.read<StationInfoBloc>().add(GetStationInfo(stationId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(station.name)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Address: ${station.address}", style: TextStyle(fontSize: 18)),
-            SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {}, // Заглушка
-              child: Text(
-                "Coordinates: ${station.latitude}, ${station.longitude}",
-                style: TextStyle(fontSize: 16, color: Colors.blue),
-              ),
-            ),
-            SizedBox(height: 8),
-            Text("Power: ${station.power} kW", style: TextStyle(fontSize: 16)),
-            Text("Operator: ${station.operator}",
-                style: TextStyle(fontSize: 16)),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text("Station Info"),
+        actions: [
+          // Adds FavoriteIcon to app bar for toggling favorites
+          FavoriteIcon(stationId: stationId),
+        ],
+      ),
+      body: BlocBuilder<StationInfoBloc, StationInfoState>(
+        // Builds UI based on the current state
+        builder: (context, state) {
+          if (state is StationInfoInitial) {
+            // Shows a loading indicator when data is being fetched
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (state is StationInfoLoaded) {
+            // Displays station details when data is loaded successfully
+            return StationDetails(station: state.station);
+          }
+
+          if (state is StationInfoError) {
+            // Displays an error message if there was an issue fetching the data
+            return Center(child: Text(state.message));
+          }
+
+          return Container(); // Default empty container if no valid state
+        },
       ),
     );
   }
