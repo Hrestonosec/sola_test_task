@@ -2,14 +2,22 @@ import 'package:auto_route/auto_route.dart';
 
 import 'app_router.gr.dart';
 
-// Routs list
+// Routes list
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: HomeRoute.page, initial: true),
-        AutoRoute(
+        CustomRoute(
+          page: HomeRoute.page,
+          initial: true,
+          transitionsBuilder: TransitionsBuilders
+              .slideRightWithFade, // Animation for transition
+          durationInMilliseconds: 500,
+        ),
+        CustomRoute(
           page: StationInfoRoute.page,
+          transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+          durationInMilliseconds: 500,
         ),
       ];
 }
